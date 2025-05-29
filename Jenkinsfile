@@ -4,9 +4,6 @@ pipeline {
     environment {
         NODE_ENV = 'production'
     }
-     triggers {
-        githubPush()
-    }
 
     stages {
         stage('Clone repository') {
@@ -23,8 +20,7 @@ pipeline {
 
         stage('Build (optional)') {
             steps {
-                // Add only if you have a build step (e.g., React build)
-                // sh 'npm run build'
+                echo "No build step needed"
             }
         }
 
