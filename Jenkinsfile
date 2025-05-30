@@ -27,7 +27,7 @@ pipeline {
         stage('Start Server') {
             steps {
                 sh 'pm2 stop all || true'
-                sh 'pm2 start server.js --name your-app-name'
+                sh 'pm2 start server.js --name awsjenkins-ecommerce'
             }
         }
     }
