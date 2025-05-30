@@ -25,9 +25,15 @@ pipeline {
         }
 
         stage('Start Server') {
-            steps {
+            steps {  
+                script {
+            def appDir = sh(script: "find . -type f -name 'server.js' | head -n 1 | xargs dirname", returnStdout: true).trim()
+            dir(appDir) {
                 sh 'pm2 stop all || true'
                 sh 'pm2 start server.js --name awsjenkins-ecommerce'
+            }
+        }
+               
             }
         }
     }
