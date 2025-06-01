@@ -9,15 +9,10 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-<<<<<<< HEAD
-    "express": "^5.1.0",
-    "multer": "^2.0.0",
-=======
     "aws-sdk": "^2.1692.0",
     "express": "^5.1.0",
     "multer": "^2.0.0",
     "multer-s3": "^3.0.1",
->>>>>>> master
     "mysql2": "^3.14.1"
   }
 }
