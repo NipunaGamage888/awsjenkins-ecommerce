@@ -11,10 +11,17 @@ pipeline {
                 git url: 'https://github.com/NipunaGamage888/awsjenkins-.git', branch: 'main'
             }
         }
+        stage('delete dependencies'){
+            steps{
+                echo 'removing dependencies'
+                sh 'rm -rf node_modules package-lock.json'
+            }
+        }
 
         stage('Install dependencies') {
             steps {
                 sh 'npm install'
+                sh 'npm list --depth=0'
             }
         }
 
@@ -47,3 +54,4 @@ pipeline {
         }
     }
 }
+
