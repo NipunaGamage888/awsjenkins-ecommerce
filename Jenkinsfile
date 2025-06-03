@@ -2,6 +2,7 @@ pipeline {
     agent any
 
     environment {
+        AWS_CREDENTIALS = credentials('aws-creds')
         NODE_ENV = 'production'
     }
 
