@@ -7,6 +7,10 @@ const path = require('path');
 const app = express();
 const PORT = 3000;
 const db = require('./db');
+const cors = require('cors');
+
+
+app.use(cors());
 
 
 // Middleware to parse JSON
