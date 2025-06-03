@@ -14,11 +14,7 @@ pipeline {
 
         stage('Install dependencies') {
             steps {
-                sh '''
-                rm -rf node_modules package-lock.json
-                npm install
-                
-                '''
+                sh 'npm install'
             }
         }
 
