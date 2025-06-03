@@ -16,7 +16,67 @@ app.use(cors());
 // Middleware to parse JSON
 app.use(express.json());
 
-// AWS S3 configuration
+// AWS S3 configurationconst express = require('express');
+require('dotenv').config();
+const multer = require('multer');
+const { S3Client } = require('@aws-sdk/client-s3');
+const multerS3 = require('multer-s3');
+const path = require('path');
+const app = express();
+const PORT = 3000;
+const db = require('./db');
+const cors = require('cors');
+
+app.use(cors());
+app.use(express.json());
+
+// ✅ AWS S3 v3 client configuration
+const s3 = new S3Client({
+    region: 'us-east-1',
+    credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+    }
+});
+
+// ✅ Configure multer with AWS SDK v3 client
+const upload = multer({
+    storage: multerS3({
+        s3: s3,
+        bucket: 's3-uploader', // ✅ your actual bucket name
+        acl: 'public-read',
+        metadata: (req, file, cb) => {
+            cb(null, { fieldName: file.fieldname });
+        },
+        key: (req, file, cb) => {
+            const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+            cb(null, 'uploads/' + uniqueSuffix + path.extname(file.originalname));
+        }
+    })
+});
+
+// ✅ Signup route with image upload
+app.post('/signup', upload.single('profilePic'), (req, res) => {
+    const { name, email, password } = req.body;
+    const profilePicUrl = req.file.location;
+
+    const sql = 'INSERT INTO users (name, email, password, profile_pic) VALUES (?, ?, ?, ?)';
+    db.query(sql, [name, email, password, profilePicUrl], (err, result) => {
+        if (err) {
+            console.error('Insert error:', err);
+            return res.status(500).json({ message: 'Error registering user' });
+        }
+        res.json({
+            message: 'User registered successfully!',
+            data: { name, email, profilePic: profilePicUrl }
+        });
+    });
+});
+
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Server running on port ${PORT}`);
+});
+
 AWS.config.update({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
